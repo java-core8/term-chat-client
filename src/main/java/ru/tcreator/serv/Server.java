@@ -2,6 +2,7 @@ package ru.tcreator.serv;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
     public void run() {
@@ -11,28 +12,17 @@ public class Server {
             try(
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                    PrintWriter terminalWriter = new PrintWriter(new OutputStreamWriter(System.out));
-                    BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
+                    PrintWriter terminal = new PrintWriter(new OutputStreamWriter(System.out));
+                    BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in))
                     ) {
-                String stringByServer = in.readLine();
-                if(stringByServer != null) {
-                    terminalWriter.write(stringByServer);
-                    if(stringByServer.contains("никнейм")) {
-                        String readLine = terminalReader.readLine().trim();
-                        out.write(readLine + "\n");
-                        out.flush();
-                    }
-                }
+
                 while (client.isConnected()) {
-                    String readLine = terminalReader.readLine().trim();
-                    out.write(readLine + "\n");
+                    String readLine = in.readLine();
+                    terminal.println(readLine);
+
+                    String read = terminalReader.readLine();
+                    out.write(read + "\n");
                     out.flush();
-
-                    String stringByServ = in.readLine();
-                    if(stringByServ != null) {
-                        terminalWriter.write(stringByServ);
-                    }
-
                 }
             }
 
