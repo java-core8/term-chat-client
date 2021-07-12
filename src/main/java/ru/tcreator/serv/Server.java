@@ -2,7 +2,6 @@ package ru.tcreator.serv;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Server {
     public void run() {
@@ -16,10 +15,26 @@ public class Server {
                     BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in))
                     ) {
 
-                while (client.isConnected()) {
-                    String readLine = in.readLine();
-                    terminal.println(readLine);
+                Thread tr = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
+                        try {
+                            while (true) {
+                                if (!client.isClosed()) {
+                                    String readLine = in.readLine();
+                                    System.out.println(readLine);
+                                }
+
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                tr.start();
+                while (client.isConnected()) {
                     String read = terminalReader.readLine();
                     out.write(read + "\n");
                     out.flush();
