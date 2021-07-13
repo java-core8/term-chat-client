@@ -1,48 +1,34 @@
 package ru.tcreator.serv;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
+
+
 public class Server {
+    protected InetSocketAddress address = new InetSocketAddress("localhost", 10156);
+    protected volatile boolean isConnect;
+
     public void run() {
-        int port = 10156;
         try {
-            Socket client = new Socket("localhost", 10156);
-            try(
-                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                    PrintWriter terminal = new PrintWriter(new OutputStreamWriter(System.out));
-                    BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in))
-                    ) {
+            Socket clientSocket = new Socket(address.getHostString(), address.getPort());
+            ServerMessageListener serverMessageListener = new ServerMessageListener(clientSocket);
+            ClientHandler clientHandler = new ClientHandler(clientSocket);
+            ServerConnectListener serverConnectListener = new ServerConnectListener(clientSocket);
+            serverConnectListener.setAddress(address);
+            Thread listenerThread = new Thread(serverMessageListener);
+            Thread clientHandlerThread = new Thread(clientHandler);
+            Thread serverConnectionListenerThread = new Thread(serverConnectListener);
 
-                Thread tr = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            while (true) {
-                                if (!client.isClosed()) {
-                                    String readLine = in.readLine();
-                                    System.out.println(readLine);
-                                }
-
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-                tr.start();
-                while (client.isConnected()) {
-                    String read = terminalReader.readLine();
-                    out.write(read + "\n");
-                    out.flush();
-                }
-            }
+            listenerThread.start();
+            clientHandlerThread.start();
+            serverConnectionListenerThread.start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 }
