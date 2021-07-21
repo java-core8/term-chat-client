@@ -1,11 +1,13 @@
 package ru.tcreator.serv;
 
 import ru.tcreator.entities.Message;
+import ru.tcreator.logger.Log;
 import ru.tcreator.parser.JSON;
 import ru.tcreator.parser.JSONMessageLog;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
 
 public class ServerMessageListener extends ClientHandlerAbstract implements Runnable {
     /**
@@ -28,11 +30,14 @@ public class ServerMessageListener extends ClientHandlerAbstract implements Runn
                 if(msgByServer != null) {
                     System.out.println(msgByServer);
                 } else {
+                    Log.toLog(ServerMessageListener.class, Level.WARNING, "Обрыв соединения с сервером");
+                    // закрытие всех потоков
+                    close();
                     break;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.logTrow(ServerMessageListener.class, "run", e);
         }
     }
 }
