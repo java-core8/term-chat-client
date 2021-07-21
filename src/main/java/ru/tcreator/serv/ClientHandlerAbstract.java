@@ -1,6 +1,6 @@
 package ru.tcreator.serv;
 
-import ru.tcreator.interfaces.MessageEntityies;
+import ru.tcreator.entities.Message;
 
 import java.io.*;
 import java.net.Socket;
@@ -37,7 +37,7 @@ public class ClientHandlerAbstract {
 
     /**
      * Отсылает сообщение для текущего соединения
-     * @param msg объект сообщения {@link MessageEntityies}
+     * @param msg объект сообщения {@link Message}
      * @throws IOException
      */
     protected void writeOut(String msg) throws IOException {
