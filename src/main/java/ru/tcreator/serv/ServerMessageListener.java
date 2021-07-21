@@ -2,6 +2,7 @@ package ru.tcreator.serv;
 
 import ru.tcreator.entities.Message;
 import ru.tcreator.parser.JSON;
+import ru.tcreator.parser.JSONMessageLog;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -23,6 +24,7 @@ public class ServerMessageListener extends ClientHandlerAbstract implements Runn
             while (ConnectServer.isConnection()) {
                 String serverString = readIn();
                 Message msgByServer = JSON.fromJsonMessage(serverString);
+                JSONMessageLog.addMessageFile(msgByServer);
                 if(msgByServer != null) {
                     System.out.println(msgByServer);
                 } else {
