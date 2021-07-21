@@ -1,25 +1,31 @@
 package ru.tcreator.serv;
 
 import ru.tcreator.entities.Nickname;
+import ru.tcreator.enums.Paths;
+import ru.tcreator.settings.Settings;
 
 import java.io.*;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 
 
 public class Server {
-    protected InetSocketAddress address = new InetSocketAddress("localhost", 51124);
 
     public void run() throws IOException {
+        Settings settings = new Settings(Paths.SETTINGS.getPath());
+        final String HOST = settings.getProperties("HOST");
+        final int PORT = Integer.parseInt(settings.getProperties("PORT"));
+
         boolean nickname = Nickname.getInstance().getNickInLine();
         if(nickname) {
             try {
-                Socket clientSocket = new Socket(address.getHostString(), address.getPort());
+                Socket clientSocket = new Socket(HOST, PORT);
                 ServerMessageListener serverMessageListener = new ServerMessageListener(clientSocket);
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 ServerConnectListener serverConnectListener = new ServerConnectListener(clientSocket);
-                serverConnectListener.setAddress(address);
+                //TODO не работающая возможность прослушки подключения
+                // запрос перебивает сообщения
+                // serverConnectListener.setAddress(address);
                 Thread listenerThread = new Thread(serverMessageListener);
                 Thread clientHandlerThread = new Thread(clientHandler);
                 Thread serverConnectionListenerThread = new Thread(serverConnectListener);
