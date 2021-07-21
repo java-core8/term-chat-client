@@ -1,7 +1,6 @@
 package ru.tcreator.serv;
 
 import ru.tcreator.interfaces.MessageEntityies;
-import ru.tcreator.parser.JSON;
 
 import java.io.*;
 import java.net.Socket;

@@ -15,7 +15,7 @@ public class ServerConnectListener extends ClientHandlerAbstract implements Runn
     public void run() {
         //TODO переписать проверку на соединение с сокетом сервера. Если работает in.read он может перебить стрим
         // на получение сообщения. Это тупо. Проверку скорее всего проще сделать в потоке слушателя сообщений от сервера
-
+        // но всё равно странная тема
 //        while (ConnectServer.isConnection()) {
 //            try {
 //                TimeUnit.MILLISECONDS.sleep(2000);

@@ -1,26 +1,33 @@
 package ru.tcreator.parser;
 
+/**
+ * Класс-парсер для строки из чата
+ */
 public class StringParser {
     protected String cleanCommand;
     protected String message;
-    protected boolean haveCommand = Boolean.FALSE;
+    protected String parameter;
+
 
     public StringParser(String msg) {
         String[] parseMessage = parseMessageString(msg);
         if(parseMessage[0] != null) {
+            // проверяем косую черту с пробелом
             parseMessage[0] = parseMessage[0].replace("/", "").trim();
             if(parseMessage[0].length() > 0) {
-                haveCommand = Boolean.TRUE;
-                cleanCommand = parseMessage[0];
+                // разделяем на параметры, если есть. Проверяем на пустой параметр
+                String[] separateParam = parseMessage[0].split("=");
+                if(separateParam.length > 1) {
+                    separateParam[1] = separateParam[1].replace("/", "").trim();
+                    if(separateParam[1].length() > 0) {
+                        parameter = separateParam[1];
+                    }
+                }
+                cleanCommand = separateParam[0];
             }
         }
         message = parseMessage[1];
     }
-
-    public boolean haveCommand() {
-        return haveCommand;
-    }
-
 
     /**
      * Парсит строку сообщения на само сообщение и подстроки команд, если такие есть
@@ -64,6 +71,10 @@ public class StringParser {
 
     public String getCommand() {
         return cleanCommand;
+    }
+
+    public String getParameter() {
+        return parameter;
     }
 
     public String getMessage() {

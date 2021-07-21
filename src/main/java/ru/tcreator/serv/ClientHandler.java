@@ -1,8 +1,8 @@
 package ru.tcreator.serv;
 
-import ru.tcreator.entityies.Message;
-import ru.tcreator.entityies.MessageBuilder;
-import ru.tcreator.enums.SendStatus;
+import ru.tcreator.entities.Message;
+import ru.tcreator.entities.MessageBuilder;
+import ru.tcreator.entities.Nickname;
 import ru.tcreator.parser.JSON;
 import ru.tcreator.parser.StringParser;
 
@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientHandler extends ClientHandlerAbstract implements Runnable {
-    protected String nickname;
-
     public ClientHandler(Socket clSocket) throws IOException {
         super(clSocket);
     }
@@ -19,32 +17,25 @@ public class ClientHandler extends ClientHandlerAbstract implements Runnable {
     @Override
     public void run() {
         try {
-            // Первая стадия ввод и отправка никнейма
-            String nicknameLine = terminalReader.readLine();
+            //Отправка никнейма
+            Nickname nicknameClass = Nickname.getInstance();
+            String nickname = nicknameClass.getNickname();
             Message message = new MessageBuilder()
-                    .setFrom(nicknameLine)
-                    .setMsg(nicknameLine)
+                    .setFrom(nickname)
+                    .setMsg(nickname)
                     .buildMessage();
-
             writeOut(JSON.toJson(message));
 
             while (ConnectServer.isConnection()) {
                 String readLineTerminal = terminalReader.readLine();
-                //TODO а вот тут нормально написать обработку сообщений
-                // хотя просто так в чат всю херню кидать вообще ок. Лол
                 StringParser parser = new StringParser(readLineTerminal);
-                System.out.println(parser.getCommand());
-                System.out.println(parser.getMessage());
 
                 Message toServer = new MessageBuilder()
-                        .setFrom(nicknameLine)
+                        .setFrom(nickname)
                         .setMsg(parser.getMessage())
                         .setCommand(parser.getCommand())
-                        .setStatus(SendStatus.GOOD)
+                        .setParameter(parser.getParameter())
                         .buildMessage();
-
-                System.out.println(toServer.getCommand());
-                System.out.println(toServer.getMsg());
                 writeOut(JSON.toJson(toServer));
             }
         } catch (IOException e) {

@@ -5,6 +5,7 @@ package ru.tcreator.serv;
  *
  */
 
+// TODO Использовался для прерывания от слушателя подключения. Но он перебивал прием сообщений.
 abstract class ConnectServer {
     static volatile boolean connection = Boolean.TRUE;
 

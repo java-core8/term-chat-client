@@ -1,6 +1,6 @@
 package ru.tcreator.serv;
 
-import ru.tcreator.interfaces.MessageEntityies;
+import ru.tcreator.entities.Message;
 import ru.tcreator.parser.JSON;
 
 import java.io.IOException;
@@ -11,7 +11,6 @@ public class ServerMessageListener extends ClientHandlerAbstract implements Runn
      * Конструктор. Инициализирует стримы in и out
      *
      * @param clSocket сокет клиента {@link Socket}
-     * @throws IOException
      */
     protected ServerMessageListener(Socket clSocket) throws IOException {
         super(clSocket);
@@ -22,7 +21,8 @@ public class ServerMessageListener extends ClientHandlerAbstract implements Runn
     public void run() {
         try {
             while (ConnectServer.isConnection()) {
-                MessageEntityies msgByServer = JSON.fromJsonMessage(readIn());
+                String serverString = readIn();
+                Message msgByServer = JSON.fromJsonMessage(serverString);
                 if(msgByServer != null) {
                     System.out.println(msgByServer);
                 } else {
