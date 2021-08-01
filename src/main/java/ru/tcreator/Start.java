@@ -9,11 +9,11 @@ import java.util.logging.Level;
 public class Start {
     public static void main(String[] args) {
         try {
-            Log.toLog(Start.class, Level.INFO, "Старт программы");
+            Log.logger.log(Level.INFO, "Старт программы");
             Server server = new Server();
             server.run();
         } catch (IOException e) {
-            Log.logTrow(Start.class, "main", e);
+            Log.logger.throwing(Start.class.getName(), "main", e);
         }
 
     }

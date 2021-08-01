@@ -26,18 +26,19 @@ public class ServerMessageListener extends ClientHandlerAbstract implements Runn
             while (ConnectServer.isConnection()) {
                 String serverString = readIn();
                 Message msgByServer = JSON.fromJsonMessage(serverString);
-                JSONMessageLog.addMessageFile(msgByServer);
                 if(msgByServer != null) {
+                    JSONMessageLog.addMessageFile(msgByServer);
+                    //вывод в чат
                     System.out.println(msgByServer);
                 } else {
-                    Log.toLog(ServerMessageListener.class, Level.WARNING, "Обрыв соединения с сервером");
+                    Log.logger.log(Level.WARNING, "Обрыв соединения с сервером");
                     // закрытие всех потоков
+                    ConnectServer.setDisconnect();
                     close();
-                    break;
                 }
             }
         } catch (IOException e) {
-            Log.logTrow(ServerMessageListener.class, "run", e);
+            Log.logger.throwing(ServerMessageListener.class.getName(), "run", e);
         }
     }
 }

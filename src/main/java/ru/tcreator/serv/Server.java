@@ -1,6 +1,4 @@
 package ru.tcreator.serv;
-
-import ru.tcreator.Start;
 import ru.tcreator.entities.Nickname;
 import ru.tcreator.enums.Paths;
 import ru.tcreator.logger.Log;
@@ -24,23 +22,20 @@ public class Server {
 
                 Socket clientSocket = new Socket(HOST, PORT);
                 //лог
-                Log.toLog(Server.class, Level.INFO, "Получен сокет клиента " + clientSocket);
+                Log.logger.log(Level.INFO, "Получен сокет клиента " + clientSocket);
                 ServerMessageListener serverMessageListener = new ServerMessageListener(clientSocket);
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
-                ServerConnectListener serverConnectListener = new ServerConnectListener(clientSocket);
+//                ServerConnectListener serverConnectListener = new ServerConnectListener(clientSocket);
                 //TODO неработающая возможность прослушки подключения
                 // запрос перебивает сообщения
                 // serverConnectListener.setAddress(address);
                 Thread listenerThread = new Thread(serverMessageListener);
                 Thread clientHandlerThread = new Thread(clientHandler);
-                Thread serverConnectionListenerThread = new Thread(serverConnectListener);
 
                 listenerThread.start();
                 clientHandlerThread.start();
-                serverConnectionListenerThread.start();
-
             } catch (IOException e) {
-                Log.logTrow(Server.class, "run", e);
+                Log.logger.throwing(Server.class.getName(), "run", e);
             }
         }
     }
