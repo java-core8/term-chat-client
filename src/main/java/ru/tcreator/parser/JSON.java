@@ -3,6 +3,8 @@ package ru.tcreator.parser;
 import com.google.gson.Gson;
 import ru.tcreator.entities.Message;
 
+import java.lang.reflect.Type;
+
 /**
  * Класс для сериализации и десериализации объектов сообщения
  */

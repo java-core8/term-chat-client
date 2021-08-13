@@ -38,4 +38,27 @@ public class JSONParserTest {
                 new Message("test", "test")
         ));
     }
+
+
+    @Test
+    @DisplayName("Тест парсера JSON, преобразование в объект сообщения")
+    @Tag("JSON")
+    void testJsonParsingToMessageFromString() {
+        String testJsonString = "{\"msg\":\"test\",\"time\":\"06:02:02 PM\",\"timeStamp\":1628521322372,\"formatTime\":\"hh:mm:ss a\",\"from\":\"testMsg\",\"to\":\"all\",\"isCommand\":false}";
+        String equalStr = "[all] testMsg 06:02:02 PM >>> test";
+        Message fromJson = JSON.fromJsonMessage(testJsonString);
+        assertEquals(equalStr, fromJson.toString());
+    }
+
+    @Test
+    @DisplayName("Тест парсера JSON, из Message  строку, без исключения ")
+    @Tag("JSON")
+    void testJsonParsingToMessageFromStringAndNotThrowing() {
+        String testJsonString = "{\"msg\":\"test\",\"time\":\"06:02:02 PM\",\"timeStamp\":1628521322372,\"formatTime\":\"hh:mm:ss a\",\"from\":\"testMsg\",\"to\":\"all\",\"isCommand\":false}";
+        assertDoesNotThrow(() -> JSON.toJson(
+                JSON.fromJsonMessage(testJsonString)
+        ));
+    }
+
+
 }

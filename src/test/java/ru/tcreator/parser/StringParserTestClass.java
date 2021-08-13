@@ -3,8 +3,6 @@ package ru.tcreator.parser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import ru.tcreator.entities.Message;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -53,6 +51,4 @@ public class StringParserTestClass {
         assertEquals(equalParameter, stringParser.getParameter());
         assertEquals(equalMsg, stringParser.getMessage());
     }
-
-
 }
